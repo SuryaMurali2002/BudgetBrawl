@@ -3,10 +3,8 @@
 import json
 import re
 
+from config import settings
 from database import run_query
-
-
-_MODEL = "mistral-large"
 
 _SYSTEM_PROMPT = (
     "You are a personal finance assistant. Given a calendar event and the user's "
@@ -45,9 +43,10 @@ def predict_spending(
     )
 
     # COMPLETE(model, messages, options): options must be present for messages-array format
+    model = settings.CORTEX_MODEL or "mistral-large2"
     rows = run_query(
         "SELECT SNOWFLAKE.CORTEX.COMPLETE(%s, PARSE_JSON(%s), PARSE_JSON(%s)) AS response",
-        (_MODEL, messages, "{}"),
+        (model, messages, "{}"),
     )
 
     raw = rows[0]["RESPONSE"] if rows else "{}"

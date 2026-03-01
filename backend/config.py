@@ -35,5 +35,8 @@ class Settings(BaseSettings):
     # Encryption key for Google refresh tokens (Fernet)
     ENCRYPTION_KEY: str = ""
 
+    # Cortex model: mistral-large2 (best quality for JSON); mistral-7b fallback if cross-region disabled
+    CORTEX_MODEL: str = "mistral-large2"
+
 
 settings = Settings()
