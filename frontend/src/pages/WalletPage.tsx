@@ -4,15 +4,6 @@ import { getBalanceHistory } from "../api/wallet";
 import { useWallet } from "../contexts/WalletContext";
 import { colors, fonts, fontSize, lineHeight, pageStyle, cardStyle, btnSecondary } from "../theme";
 
-/** Demo data so you can see the chart when there are no transactions yet */
-const DEMO_BALANCE_HISTORY = [
-  { date: "1/1", balance: 50 },
-  { date: "1/5", balance: 45 },
-  { date: "1/12", balance: 55 },
-  { date: "1/18", balance: 52 },
-  { date: "1/25", balance: 60 },
-];
-
 export default function WalletPage() {
   const { balance, transactions, refresh } = useWallet();
   const [balanceHistory, setBalanceHistory] = useState<{ date: string; balance: number }[]>([]);
@@ -31,10 +22,6 @@ export default function WalletPage() {
       })
       .catch(() => {});
   }, []);
-
-  const hasRealBalanceHistory = balanceHistory.length > 0;
-  const balanceChartData = hasRealBalanceHistory ? balanceHistory : DEMO_BALANCE_HISTORY;
-  const isDemoBalance = !hasRealBalanceHistory;
 
   return (
     <div style={{ ...pageStyle, maxWidth: "600px" }}>
@@ -68,23 +55,27 @@ export default function WalletPage() {
         </div>
       </div>
 
-      <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading, marginBottom: "0.5rem" }}>
-        Balance over time {isDemoBalance && <span style={{ fontSize: fontSize.bodySmall, fontWeight: 400, color: colors.textSecondary }}>(sample — no transactions yet)</span>}
-      </h2>
-      <div className="hover-card" style={{ ...cardStyle, marginBottom: "1.5rem", overflow: "auto" }}>
-        <ResponsiveContainer width="100%" height={240}>
-          <LineChart data={balanceChartData} margin={{ top: 12, right: 12, left: 8, bottom: 24 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" />
-            <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="rgba(255,255,255,0.6)" />
-            <YAxis tick={{ fontSize: 11 }} stroke="rgba(255,255,255,0.6)" tickFormatter={(v) => `$${v}`} />
-            <Tooltip
-              formatter={(v: number) => [`$${Number(v).toFixed(2)}`, "Balance"]}
-              contentStyle={{ background: "rgba(26,26,46,0.9)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8 }}
-            />
-            <Line type="monotone" dataKey="balance" stroke={colors.green} strokeWidth={2} dot={{ fill: colors.green }} name="Balance" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      {balanceHistory.length > 0 && (
+        <>
+          <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading, marginBottom: "0.5rem" }}>
+            Balance over time
+          </h2>
+          <div className="hover-card" style={{ ...cardStyle, marginBottom: "1.5rem", overflow: "auto" }}>
+            <ResponsiveContainer width="100%" height={240}>
+              <LineChart data={balanceHistory} margin={{ top: 12, right: 12, left: 8, bottom: 24 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" />
+                <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="rgba(255,255,255,0.6)" />
+                <YAxis tick={{ fontSize: 11 }} stroke="rgba(255,255,255,0.6)" tickFormatter={(v) => `$${v}`} />
+                <Tooltip
+                  formatter={(v: number) => [`$${Number(v).toFixed(2)}`, "Balance"]}
+                  contentStyle={{ background: "rgba(26,26,46,0.9)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8 }}
+                />
+                <Line type="monotone" dataKey="balance" stroke={colors.green} strokeWidth={2} dot={{ fill: colors.green }} name="Balance" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </>
+      )}
 
       <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading }}>Transaction History</h2>
       {(transactions as any[]).length === 0 ? (
