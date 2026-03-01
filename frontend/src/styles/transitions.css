@@ -55,6 +55,14 @@
   transform: scale(1.02);
 }
 
+/* Nav logo — larger via scale, zoom on hover (layout space unchanged) */
+.nav-logo-link img {
+  transition: transform 0.25s ease;
+}
+.nav-logo-link:hover img {
+  transform: scale(1.55) !important;
+}
+
 /* Nav links */
 .hover-nav-link {
   transition: color 0.2s ease;
