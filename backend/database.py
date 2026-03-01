@@ -1,5 +1,6 @@
 """Snowflake connection management with SQLite fallback when Snowflake is unavailable."""
 
+import json
 import sqlite3
 import threading
 from contextlib import contextmanager
@@ -55,6 +56,27 @@ def _init_sqlite():
             question_key TEXT NOT NULL,
             answer_text TEXT DEFAULT '',
             PRIMARY KEY (user_id, question_key)
+        );
+        CREATE TABLE IF NOT EXISTS calendar_events (
+            event_id TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            title TEXT,
+            start_time TEXT NOT NULL,
+            end_time TEXT,
+            description TEXT,
+            location TEXT,
+            synced_at TEXT DEFAULT (datetime('now')),
+            PRIMARY KEY (event_id, user_id)
+        );
+        CREATE TABLE IF NOT EXISTS spending_predictions (
+            prediction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
+            event_id TEXT NOT NULL,
+            predicted_amount REAL NOT NULL,
+            suggested_limit REAL,
+            reasoning_text TEXT,
+            generated_at TEXT DEFAULT (datetime('now')),
+            UNIQUE (user_id, event_id)
         );
     """)
     conn.commit()
@@ -118,6 +140,14 @@ def run_query(
             return []
     conn = _get_sqlite_connection()
     sql_sqlite = sql.replace("%s", "?").replace("CURRENT_TIMESTAMP()", "datetime('now')")
+    # #region agent log
+    try:
+        _log_path = Path(__file__).resolve().parent.parent / "debug-185af0.log"
+        with open(_log_path, "a") as _f:
+            _f.write(json.dumps({"sessionId":"185af0","location":"database.py:run_query","message":"SQLite path","data":{"db_type":"sqlite","query_refs_spending_predictions":"spending_predictions" in sql},"hypothesisId":"H1","timestamp":__import__("time").time_ns()//1_000_000})+ "\n")
+    except Exception:
+        pass
+    # #endregion
     cur = conn.execute(sql_sqlite, params)
     if fetch:
         rows = cur.fetchall()
