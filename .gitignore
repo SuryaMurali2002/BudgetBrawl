@@ -22,6 +22,12 @@ build/
 node_modules/
 frontend/dist/
 frontend/.vite/
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.pem
+coverage/
 
 # IDE
 .vscode/
