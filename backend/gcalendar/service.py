@@ -2,7 +2,7 @@
 
 from fastapi import HTTPException
 
-from database import get_db_type, run_query
+from database import run_query
 from gcalendar.google_calendar import fetch_next_7_days
 
 
@@ -23,35 +23,22 @@ def sync_calendar(user_id: str) -> list[dict]:
             status_code=502, detail=f"Google Calendar fetch failed: {exc}"
         )
 
-    db_type = get_db_type()
-    if db_type == "sqlite":
-        # SQLite: INSERT ... ON CONFLICT (MERGE not supported)
-        sql = """
-            INSERT INTO calendar_events (event_id, user_id, title, start_time, end_time, description, location)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT(event_id, user_id) DO UPDATE SET
-                title = excluded.title, start_time = excluded.start_time, end_time = excluded.end_time,
-                description = excluded.description, location = excluded.location,
-                synced_at = datetime('now')
-        """
-    else:
-        # Snowflake: MERGE
-        sql = """
-            MERGE INTO calendar_events AS tgt
-            USING (SELECT %s AS event_id, %s AS user_id, %s AS title,
-                          %s::TIMESTAMP_TZ AS start_time, %s::TIMESTAMP_TZ AS end_time,
-                          %s AS description, %s AS location) AS src
-            ON tgt.event_id = src.event_id AND tgt.user_id = src.user_id
-            WHEN MATCHED THEN UPDATE SET
-                title = src.title, start_time = src.start_time, end_time = src.end_time,
-                description = src.description, location = src.location,
-                synced_at = CURRENT_TIMESTAMP()
-            WHEN NOT MATCHED THEN INSERT
-                (event_id, user_id, title, start_time, end_time, description, location)
-            VALUES
-                (src.event_id, src.user_id, src.title, src.start_time, src.end_time,
-                 src.description, src.location)
-        """
+    sql = """
+        MERGE INTO calendar_events AS tgt
+        USING (SELECT %s AS event_id, %s AS user_id, %s AS title,
+                      %s::TIMESTAMP_TZ AS start_time, %s::TIMESTAMP_TZ AS end_time,
+                      %s AS description, %s AS location) AS src
+        ON tgt.event_id = src.event_id AND tgt.user_id = src.user_id
+        WHEN MATCHED THEN UPDATE SET
+            title = src.title, start_time = src.start_time, end_time = src.end_time,
+            description = src.description, location = src.location,
+            synced_at = CURRENT_TIMESTAMP()
+        WHEN NOT MATCHED THEN INSERT
+            (event_id, user_id, title, start_time, end_time, description, location)
+        VALUES
+            (src.event_id, src.user_id, src.title, src.start_time, src.end_time,
+             src.description, src.location)
+    """
 
     try:
         for ev in events:
