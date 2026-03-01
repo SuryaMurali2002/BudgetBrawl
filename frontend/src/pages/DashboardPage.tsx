@@ -1,22 +1,73 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+} from "recharts";
 import { syncCalendar } from "../api/calendar";
-import { generatePredictions, getPredictions } from "../api/predictions";
+import { generatePredictions, getPredictions, getPredictionVsActual } from "../api/predictions";
+import { getWinLossStats } from "../api/challenges";
 import { useAuth } from "../contexts/AuthContext";
 import { useWallet } from "../contexts/WalletContext";
 import { colors, fonts, fontSize, lineHeight, pageStyle, cardStyle, btnPrimary, btnSecondary, linkStyle } from "../theme";
+
+type WinLossStats = {
+  wins: number;
+  losses: number;
+  total_won: number;
+  total_lost: number;
+  win_rate: number | null;
+};
+
+/** Demo data so you can see chart layout when there's no real data yet */
+const DEMO_WIN_LOSS: WinLossStats = { wins: 2, losses: 1, total_won: 10, total_lost: 5, win_rate: 66.7 };
+const DEMO_VS_ACTUAL = [
+  { name: "1/15/25", eventTitle: "Lunch with friends", predicted: 25, actual: 22 },
+  { name: "1/22/25", eventTitle: "Coffee run", predicted: 12, actual: 15 },
+  { name: "1/28/25", eventTitle: "Dinner out", predicted: 45, actual: 38 },
+];
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const { balance, refresh: refreshWallet } = useWallet();
   const [predictions, setPredictions] = useState<any[]>([]);
+  const [vsActual, setVsActual] = useState<any[]>([]);
+  const [winLossStats, setWinLossStats] = useState<WinLossStats | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
     getPredictions().then(setPredictions).catch(() => {});
+    getPredictionVsActual().then(setVsActual).catch(() => {});
+    getWinLossStats().then(setWinLossStats).catch(() => {});
   }, []);
+
+  const hasRealWinLoss = winLossStats && (winLossStats.wins > 0 || winLossStats.losses > 0);
+  const winLossDisplay = hasRealWinLoss ? winLossStats! : DEMO_WIN_LOSS;
+  const isDemoWinLoss = !hasRealWinLoss;
+
+  const hasRealVsActual = vsActual.length > 0;
+  const vsActualChartData = hasRealVsActual
+    ? vsActual.map((r: any) => {
+        const resolved = r.RESOLVED_AT || r.resolved_at;
+        return {
+          name: resolved ? new Date(resolved).toLocaleDateString() : `#${r.CHALLENGE_ID ?? r.challenge_id}`,
+          eventTitle: r.EVENT_TITLE || r.event_title || "",
+          predicted: Number(r.PREDICTED_AMOUNT ?? r.predicted_amount ?? 0),
+          actual: Number(r.ACTUAL_AMOUNT ?? r.actual_amount ?? 0),
+        };
+      })
+    : DEMO_VS_ACTUAL;
+  const isDemoVsActual = !hasRealVsActual;
 
   const handleSync = async () => {
     setSyncing(true);
@@ -72,6 +123,26 @@ export default function DashboardPage() {
             View challenges
           </Link>
         </div>
+        <div className="hover-card" style={{ ...cardStyle, flex: 1, minWidth: "180px" }}>
+          <div style={{ fontSize: fontSize.bodySmall, color: colors.textSecondary, fontWeight: 500 }}>
+            Win / Loss {isDemoWinLoss && <span style={{ opacity: 0.8, fontWeight: 400 }}>(sample)</span>}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+            <div style={{ fontSize: fontSize.body, fontWeight: 600, lineHeight: lineHeight.tight }}>
+              <span style={{ color: colors.green }}>{winLossDisplay.wins}W</span>
+              <span style={{ color: colors.textSecondary, margin: "0 0.25rem" }}>/</span>
+              <span style={{ color: colors.coral }}>{winLossDisplay.losses}L</span>
+            </div>
+            {winLossDisplay.win_rate != null && (
+              <span style={{ fontSize: fontSize.bodySmall, color: colors.textSecondary }}>
+                {winLossDisplay.win_rate}% win rate
+              </span>
+            )}
+          </div>
+          <div style={{ fontSize: fontSize.bodySmall, color: colors.textSecondary, marginTop: "0.25rem" }}>
+            +${winLossDisplay.total_won.toFixed(2)} / −${winLossDisplay.total_lost.toFixed(2)}
+          </div>
+        </div>
       </div>
 
       <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1rem" }}>
@@ -86,6 +157,55 @@ export default function DashboardPage() {
       {msg && (
         <p style={{ color: colors.primary, marginBottom: "1rem", fontSize: fontSize.bodySmall, fontWeight: 500 }}>{msg}</p>
       )}
+
+      <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading, marginBottom: "0.5rem" }}>
+        Win / Loss {isDemoWinLoss && <span style={{ fontSize: fontSize.bodySmall, fontWeight: 400, color: colors.textSecondary }}>(sample — no data yet)</span>}
+      </h2>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+        <div className="hover-card" style={{ ...cardStyle, minWidth: "200px" }}>
+          <div style={{ fontSize: fontSize.bodySmall, color: colors.textSecondary, marginBottom: "0.5rem" }}>Challenges resolved</div>
+          <ResponsiveContainer width={140} height={140}>
+            <PieChart>
+              <Pie
+                data={[
+                  { name: "Wins", value: winLossDisplay.wins, fill: colors.green },
+                  { name: "Losses", value: winLossDisplay.losses, fill: colors.coral },
+                ].filter((d) => d.value > 0)}
+                cx="50%"
+                cy="50%"
+                innerRadius={36}
+                outerRadius={56}
+                paddingAngle={2}
+                dataKey="value"
+                nameKey="name"
+                label={({ name, value }) => `${name}: ${value}`}
+              />
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading, marginBottom: "0.5rem" }}>
+        Prediction vs Actual {isDemoVsActual && <span style={{ fontSize: fontSize.bodySmall, fontWeight: 400, color: colors.textSecondary }}>(sample — no data yet)</span>}
+      </h2>
+      <div className="hover-card" style={{ ...cardStyle, marginBottom: "1.5rem", overflow: "auto" }}>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={vsActualChartData} margin={{ top: 12, right: 12, left: 8, bottom: 24 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" />
+            <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="rgba(255,255,255,0.6)" />
+            <YAxis tick={{ fontSize: 11 }} stroke="rgba(255,255,255,0.6)" tickFormatter={(v) => `$${v}`} />
+            <Tooltip
+              formatter={(v: number) => [`$${Number(v).toFixed(2)}`]}
+              contentStyle={{ background: "rgba(26,26,46,0.9)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8 }}
+              labelFormatter={(_, payload) => (payload[0]?.payload?.eventTitle as string) || ""}
+            />
+            <Legend />
+            <Bar dataKey="predicted" name="Predicted" fill={colors.primary} radius={[4, 4, 0, 0]} />
+            <Bar dataKey="actual" name="Actual" fill={colors.accent} radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading }}>Upcoming Events & Predictions</h2>
       {predictions.length === 0 ? (

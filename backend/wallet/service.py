@@ -25,6 +25,19 @@ def get_transactions(user_id: str) -> list[dict]:
     )
 
 
+def get_balance_history(user_id: str) -> list[dict]:
+    """Return created_at and balance_after for wallet balance-over-time chart."""
+    return run_query(
+        """
+        SELECT created_at, balance_after
+        FROM wallet_transactions
+        WHERE user_id = %s
+        ORDER BY created_at ASC
+        """,
+        (user_id,),
+    )
+
+
 def record_transaction(
     conn,
     user_id: str,
