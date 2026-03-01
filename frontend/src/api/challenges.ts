@@ -19,3 +19,7 @@ export const reportSpend = (id: number, actual_amount_spent: number) =>
   apiClient
     .post(`/challenges/${id}/report`, { actual_amount_spent })
     .then((r) => r.data);
+
+/** Win/loss stats: wins, losses, total_won, total_lost, win_rate. */
+export const getWinLossStats = () =>
+  apiClient.get("/challenges/stats").then((r) => r.data);

@@ -202,3 +202,27 @@ def get_prediction(prediction_id: int, user_id: str) -> dict:
     if not rows:
         raise HTTPException(status_code=404, detail="Prediction not found")
     return rows[0]
+
+
+def get_prediction_vs_actual(user_id: str) -> list[dict]:
+    """
+    Return resolved challenges with predicted vs actual spend for charting.
+    JOIN predictions + challenges + outcomes; filter by user as initiator or friend.
+    """
+    return run_query(
+        """
+        SELECT
+            co.resolved_at AS resolved_at,
+            sp.predicted_amount AS predicted_amount,
+            co.actual_amount_spent AS actual_amount,
+            c.challenge_id AS challenge_id,
+            ce.title AS event_title
+        FROM challenge_outcomes co
+        JOIN challenges c ON c.challenge_id = co.challenge_id
+        JOIN spending_predictions sp ON sp.prediction_id = c.prediction_id
+        JOIN calendar_events ce ON ce.event_id = c.event_id AND ce.user_id = c.initiator_id
+        WHERE (c.initiator_id = %s OR c.friend_id = %s)
+        ORDER BY co.resolved_at ASC
+        """,
+        (user_id, user_id),
+    )

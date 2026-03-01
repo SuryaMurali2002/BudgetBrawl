@@ -233,3 +233,39 @@ def get_challenge(challenge_id: int, user_id: str) -> dict:
     if not rows:
         raise HTTPException(status_code=404, detail="Challenge not found")
     return rows[0]
+
+
+def get_win_loss_stats(user_id: str) -> dict:
+    """Aggregate challenge_outcomes for current user: wins, losses, total_won, total_lost, win_rate."""
+    rows = run_query(
+        """
+        SELECT
+            COUNT(CASE WHEN winner_id = %s THEN 1 END) AS wins,
+            COUNT(CASE WHEN loser_id = %s THEN 1 END) AS losses,
+            COALESCE(SUM(CASE WHEN winner_id = %s THEN pot_amount ELSE 0 END), 0) AS total_won,
+            COALESCE(SUM(CASE WHEN loser_id = %s THEN pot_amount ELSE 0 END), 0) AS total_lost
+        FROM challenge_outcomes
+        WHERE winner_id = %s OR loser_id = %s
+        """,
+        (user_id, user_id, user_id, user_id, user_id, user_id),
+    )
+    if not rows:
+        return {
+            "wins": 0,
+            "losses": 0,
+            "total_won": 0.0,
+            "total_lost": 0.0,
+            "win_rate": None,
+        }
+    r = rows[0]
+    wins = int(r.get("WINS") or 0)
+    losses = int(r.get("LOSSES") or 0)
+    total = wins + losses
+    win_rate = (wins / total * 100) if total else None
+    return {
+        "wins": wins,
+        "losses": losses,
+        "total_won": float(r.get("TOTAL_WON") or 0),
+        "total_lost": float(r.get("TOTAL_LOST") or 0),
+        "win_rate": round(win_rate, 1) if win_rate is not None else None,
+    }

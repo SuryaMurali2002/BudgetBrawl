@@ -1,57 +1,99 @@
-/** Shared theme constants — Duolingo/Venmo-inspired light playful theme */
+/** Shared theme — RBC-inspired (blue #005DAA, yellow #FFD200) */
 
 export const colors = {
+  // RBC brand
+  primary: "#005DAA",
+  primaryHover: "#004a87",
+  accent: "#FFD200",
+  accentHover: "#e6bd00",
+
   // Backgrounds
   pageBg: "#FAFAF8",
   cardBg: "#FFFFFF",
   navBg: "#FFFFFF",
   inputBg: "#F4F4F2",
 
-  // Brand
-  primary: "#7C5CFC",
-  primaryHover: "#6A4CE0",
-
   // Text
   textPrimary: "#1A1A2E",
-  textSecondary: "#8E8E93",
-  textMuted: "#B0B0B8",
+  textSecondary: "#5a5a6e",
+  textMuted: "#8E8E93",
 
   // Status
-  green: "#58CC02",
+  green: "#058c42",
   coral: "#FF6B6B",
   orange: "#FFB020",
-  blue: "#4A9DFF",
+  blue: "#005DAA",
 
   // Borders
   border: "#E8E8E8",
   borderLight: "#F0F0F0",
 };
 
+/** Font stack: EB Garamond for headings, Source Sans 3 for body */
+export const fonts = {
+  heading: "'EB Garamond', Georgia, serif",
+  body: "'Source Sans 3', 'Work Sans', sans-serif",
+};
+
+/** Type scale — single source for font sizes (RBC/pro fintech style) */
+export const fontSize = {
+  caption: "0.8125rem",   // 13px — timestamps, tiny labels
+  bodySmall: "0.875rem",  // 14px — secondary text, labels, links
+  body: "1rem",           // 16px — body copy
+  h3: "1.125rem",         // 18px — small headings
+  h2: "1.25rem",          // 20px — section headings
+  h1: "1.5rem",           // 24px — page title
+  hero: "1.75rem",        // 28px — welcome/hero (sparingly)
+  display: "2rem",        // 32px — big numbers (balance, etc.)
+};
+
+/** Line heights */
+export const lineHeight = {
+  tight: 1.25,
+  heading: 1.3,
+  body: 1.5,
+};
+
+/** Shared transition for hovers (use in style + hover class) */
+export const transition = {
+  all: "color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease",
+};
+
 export const pageStyle: React.CSSProperties = {
   padding: "1.5rem",
   maxWidth: "720px",
   margin: "0 auto",
-  fontFamily: "'Inter', 'SF Pro Display', -apple-system, sans-serif",
+  fontFamily: fonts.body,
+  fontSize: fontSize.body,
+  lineHeight: lineHeight.body,
   color: colors.textPrimary,
 };
 
+/** Glass panel over rainbow — semi-transparent + blur so background shows through */
+const glass = {
+  background: "rgba(255, 255, 255, 0.14)",
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)" as const,
+  border: "1px solid rgba(255, 255, 255, 0.22)",
+};
+
 export const cardStyle: React.CSSProperties = {
-  background: colors.cardBg,
-  borderRadius: "16px",
+  ...glass,
+  borderRadius: "12px",
   padding: "1rem 1.25rem",
   marginBottom: "0.75rem",
-  border: `1px solid ${colors.borderLight}`,
-  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+  transition: transition.all,
 };
 
 export const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "0.7rem 0.9rem",
-  borderRadius: "12px",
+  borderRadius: "10px",
   border: `1px solid ${colors.border}`,
   background: colors.inputBg,
   color: colors.textPrimary,
-  fontSize: "1rem",
+  fontSize: fontSize.body,
   boxSizing: "border-box",
   outline: "none",
 };
@@ -62,13 +104,26 @@ export const selectStyle: React.CSSProperties = {
 
 export const btnPrimary: React.CSSProperties = {
   padding: "0.7rem 1.3rem",
-  borderRadius: "12px",
+  borderRadius: "10px",
   border: "none",
   background: colors.primary,
   color: "#fff",
-  fontWeight: 700,
+  fontWeight: 600,
   cursor: "pointer",
-  fontSize: "1rem",
+  fontSize: fontSize.body,
+  transition: transition.all,
+};
+
+export const btnAccent: React.CSSProperties = {
+  padding: "0.7rem 1.3rem",
+  borderRadius: "10px",
+  border: "none",
+  background: colors.accent,
+  color: "#1A1A2E",
+  fontWeight: 600,
+  cursor: "pointer",
+  fontSize: fontSize.body,
+  transition: transition.all,
 };
 
 export const btnSecondary: React.CSSProperties = {
@@ -77,9 +132,10 @@ export const btnSecondary: React.CSSProperties = {
   border: `1px solid ${colors.border}`,
   background: colors.cardBg,
   color: colors.textPrimary,
-  fontWeight: 600,
+  fontWeight: 500,
   cursor: "pointer",
-  fontSize: "0.9rem",
+  fontSize: fontSize.bodySmall,
+  transition: transition.all,
 };
 
 export const btnSmall: React.CSSProperties = {
@@ -87,16 +143,18 @@ export const btnSmall: React.CSSProperties = {
   borderRadius: "8px",
   border: "none",
   color: "#fff",
-  fontWeight: 600,
+  fontWeight: 500,
   cursor: "pointer",
-  fontSize: "0.85rem",
+  fontSize: fontSize.bodySmall,
+  transition: transition.all,
 };
 
 export const linkStyle: React.CSSProperties = {
   color: colors.primary,
   textDecoration: "none",
-  fontSize: "0.85rem",
-  fontWeight: 600,
+  fontSize: fontSize.bodySmall,
+  fontWeight: 500,
+  transition: transition.all,
 };
 
 export const labelStyle: React.CSSProperties = {
@@ -104,6 +162,6 @@ export const labelStyle: React.CSSProperties = {
   marginTop: "1rem",
   marginBottom: "0.4rem",
   color: colors.textSecondary,
-  fontSize: "0.9rem",
-  fontWeight: 600,
+  fontSize: fontSize.bodySmall,
+  fontWeight: 500,
 };

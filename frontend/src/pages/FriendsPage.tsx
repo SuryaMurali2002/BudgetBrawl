@@ -6,7 +6,7 @@ import {
   getPending,
   sendRequest,
 } from "../api/friends";
-import { colors, pageStyle, cardStyle, inputStyle, btnPrimary, btnSmall } from "../theme";
+import { colors, fonts, fontSize, lineHeight, pageStyle, cardStyle, inputStyle, btnPrimary, btnSmall } from "../theme";
 
 export default function FriendsPage() {
   const [friends, setFriends] = useState<any[]>([]);
@@ -46,7 +46,7 @@ export default function FriendsPage() {
 
   return (
     <div style={pageStyle}>
-      <h1 style={{ fontWeight: 800 }}>Friends</h1>
+      <h1 style={{ fontFamily: fonts.heading, fontSize: fontSize.h1, fontWeight: 600, lineHeight: lineHeight.heading }}>Friends</h1>
 
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
         <input
@@ -56,27 +56,31 @@ export default function FriendsPage() {
           onChange={(e) => setEmail(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleAdd()}
         />
-        <button onClick={handleAdd} style={btnPrimary}>
+        <button type="button" onClick={handleAdd} className="hover-btn-primary" style={btnPrimary}>
           Add Friend
         </button>
       </div>
-      {msg && <p style={{ color: colors.primary, fontWeight: 500 }}>{msg}</p>}
+      {msg && <p style={{ color: colors.primary, fontSize: fontSize.bodySmall, fontWeight: 500 }}>{msg}</p>}
 
       {pending.length > 0 && (
         <>
-          <h2 style={{ fontWeight: 700 }}>Pending Requests</h2>
+          <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading }}>Pending Requests</h2>
           {pending.map((p: any) => (
-            <div key={p.FRIENDSHIP_ID} style={{ ...cardStyle, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontWeight: 600 }}>{p.DISPLAY_NAME ?? p.EMAIL}</span>
+            <div key={p.FRIENDSHIP_ID} className="hover-card" style={{ ...cardStyle, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontWeight: 600, fontSize: fontSize.body }}>{p.DISPLAY_NAME ?? p.EMAIL}</span>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <button
+                  type="button"
                   onClick={() => handleAccept(p.FRIENDSHIP_ID)}
+                  className="hover-btn-small"
                   style={{ ...btnSmall, background: colors.green }}
                 >
                   Accept
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleDecline(p.FRIENDSHIP_ID)}
+                  className="hover-btn-small"
                   style={{ ...btnSmall, background: colors.coral }}
                 >
                   Decline
@@ -87,15 +91,15 @@ export default function FriendsPage() {
         </>
       )}
 
-      <h2 style={{ fontWeight: 700 }}>My Friends ({friends.length})</h2>
+      <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading }}>My Friends ({friends.length})</h2>
       {friends.length === 0 ? (
-        <p style={{ color: colors.textSecondary }}>No friends yet. Add someone!</p>
+        <p style={{ color: colors.textSecondary, fontSize: fontSize.body }}>No friends yet. Add someone!</p>
       ) : (
         friends.map((f: any) => (
-          <div key={f.FRIENDSHIP_ID} style={{ ...cardStyle, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div key={f.FRIENDSHIP_ID} className="hover-card" style={{ ...cardStyle, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <div style={{ fontWeight: 600 }}>{f.DISPLAY_NAME ?? f.EMAIL}</div>
-              <div style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>
+              <div style={{ fontWeight: 600, fontSize: fontSize.body }}>{f.DISPLAY_NAME ?? f.EMAIL}</div>
+              <div style={{ color: colors.textSecondary, fontSize: fontSize.bodySmall }}>
                 {f.EMAIL}
               </div>
             </div>

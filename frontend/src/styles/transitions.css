@@ -1,0 +1,91 @@
+/* Hover and transition utilities — RBC theme */
+
+/* Loading spinner */
+.loading-spinner {
+  border-style: solid;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Skeleton placeholder */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #e8e8e8 0%,
+    #f5f5f5 50%,
+    #e8e8e8 100%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+  border-radius: 6px;
+}
+@keyframes skeleton-shimmer {
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* Buttons */
+.hover-btn-primary:hover {
+  background-color: #004a87 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 93, 170, 0.35);
+}
+
+.hover-btn-accent:hover {
+  background-color: #e6bd00 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 210, 0, 0.4);
+}
+
+.hover-btn-secondary:hover {
+  background-color: #f4f4f2 !important;
+  border-color: #005DAA !important;
+  color: #005DAA !important;
+}
+
+.hover-btn-small:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* Nav logo — larger via scale, zoom on hover (layout space unchanged) */
+.nav-logo-link img {
+  transition: transform 0.25s ease;
+}
+.nav-logo-link:hover img {
+  transform: scale(1.55) !important;
+}
+
+/* Nav links */
+.hover-nav-link {
+  transition: color 0.2s ease;
+}
+.hover-nav-link:hover {
+  color: #005DAA !important;
+}
+
+/* Sign out / ghost button */
+.hover-ghost:hover {
+  background-color: rgba(0, 93, 170, 0.08) !important;
+  color: #005DAA !important;
+  border-color: #005DAA !important;
+}
+
+/* Cards (clickable or link area) */
+.hover-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Links */
+.hover-link:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}

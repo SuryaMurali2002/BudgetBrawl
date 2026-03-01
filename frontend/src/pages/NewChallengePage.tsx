@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getFriends } from "../api/friends";
 import { getPredictions } from "../api/predictions";
 import { createChallenge } from "../api/challenges";
-import { colors, pageStyle, selectStyle, inputStyle, btnPrimary, labelStyle } from "../theme";
+import { colors, fonts, fontSize, lineHeight, pageStyle, selectStyle, inputStyle, btnPrimary, labelStyle } from "../theme";
 
 export default function NewChallengePage() {
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ export default function NewChallengePage() {
 
   return (
     <div style={{ ...pageStyle, maxWidth: "600px" }}>
-      <h1 style={{ fontWeight: 800 }}>New Challenge</h1>
+      <h1 style={{ fontFamily: fonts.heading, fontSize: fontSize.h1, fontWeight: 600, lineHeight: lineHeight.heading }}>New Challenge</h1>
 
       <label style={labelStyle}>Event</label>
       <select
@@ -136,11 +136,13 @@ export default function NewChallengePage() {
         onChange={(e) => setStake(e.target.value)}
       />
 
-      {error && <p style={{ color: colors.coral, marginTop: "0.5rem" }}>{error}</p>}
+      {error && <p style={{ color: colors.coral, marginTop: "0.5rem", fontSize: fontSize.bodySmall }}>{error}</p>}
 
       <button
+        type="button"
         onClick={handleSubmit}
         disabled={submitting}
+        className="hover-btn-primary"
         style={{ ...btnPrimary, marginTop: "1.25rem", width: "100%", opacity: submitting ? 0.6 : 1 }}
       >
         {submitting ? "Creating..." : "Create Challenge"}

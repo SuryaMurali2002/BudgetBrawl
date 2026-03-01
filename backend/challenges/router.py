@@ -11,6 +11,7 @@ from challenges.service import (
     get_challenge,
     list_challenges,
     report_spend,
+    get_win_loss_stats,
 )
 
 router = APIRouter(prefix="/challenges", tags=["challenges"])
@@ -31,6 +32,12 @@ def create(body: CreateChallenge, current_user: dict = Depends(get_current_user)
 @router.get("/")
 def list_all(current_user: dict = Depends(get_current_user)):
     return list_challenges(current_user["sub"])
+
+
+@router.get("/stats")
+def stats(current_user: dict = Depends(get_current_user)):
+    """Win/loss aggregate for current user (wins, losses, total_won, total_lost, win_rate)."""
+    return get_win_loss_stats(current_user["sub"])
 
 
 @router.get("/{challenge_id}")

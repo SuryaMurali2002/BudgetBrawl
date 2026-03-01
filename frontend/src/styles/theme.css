@@ -1,0 +1,31 @@
+/* Theme variables — light mode (default) */
+
+/* Light: bright, readable — white cards, soft gray bg, dark text */
+:root {
+  --color-primary: #005DAA;
+  --color-primary-hover: #004a87;
+  --color-accent: #FFD200;
+  --color-accent-hover: #e6bd00;
+  --color-page-bg: #F5F7FA;
+  --color-card-bg: #FFFFFF;
+  --color-nav-bg: #FFFFFF;
+  --color-input-bg: #F1F3F4;
+  --color-text-primary: #1A1A2E;
+  --color-text-secondary: #5a5a6e;
+  --color-text-muted: #8E8E93;
+  --color-green: #058c42;
+  --color-coral: #FF6B6B;
+  --color-orange: #FFB020;
+  --color-blue: #005DAA;
+  --color-border: #E8E8E8;
+  --color-border-light: #F0F0F0;
+  --color-glass-bg: rgba(255, 255, 255, 0.9);
+  --color-glass-border: rgba(0, 0, 0, 0.08);
+  --color-nav-glass-bg: rgba(255, 255, 255, 0.95);
+  --color-nav-glass-border: rgba(0, 0, 0, 0.06);
+  --color-btn-secondary-bg: #FFFFFF;
+  --color-chart-stroke: rgba(90, 90, 110, 0.4);
+  --color-chart-tick: rgba(90, 90, 110, 0.8);
+  --color-chart-tooltip-bg: rgba(26, 26, 46, 0.92);
+  --color-chart-tooltip-border: rgba(90, 90, 110, 0.4);
+}

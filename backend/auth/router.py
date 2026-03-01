@@ -35,6 +35,17 @@ def login_google():
     return response
 
 
+def _debug_log(msg: str, data: dict):
+    import json
+    import os
+    try:
+        log_path = os.path.join(os.path.dirname(__file__), "..", "debug-058dcb.log")
+        with open(log_path, "a") as f:
+            f.write(json.dumps({"sessionId": "058dcb", "location": "auth/router.py", "message": msg, "data": data, "hypothesisId": "H5", "timestamp": __import__("time").time() * 1000}) + "\n")
+    except Exception:
+        pass
+
+
 @router.get("/callback")
 async def auth_callback(
     request: Request,
@@ -42,7 +53,13 @@ async def auth_callback(
     state: str | None = None,
 ):
     """Exchange Google code, upsert user, issue JWT, redirect to frontend."""
+    # #region agent log
+    _debug_log("auth_callback reached", {"has_code": code is not None, "has_state": state is not None})
+    # #endregion
     if code is None or state is None:
+        # #region agent log
+        _debug_log("auth_callback fail: missing code/state", {})
+        # #endregion
         raise HTTPException(
             status_code=400,
             detail="Missing code or state. This page should only be reached after signing in with Google. Please go to the login page and try again.",
@@ -52,6 +69,9 @@ async def auth_callback(
     try:
         credentials = exchange_code(flow, code, code_verifier)
     except Exception as exc:
+        # #region agent log
+        _debug_log("auth_callback fail: exchange_code", {"err": str(exc), "has_code_verifier": bool(code_verifier)})
+        # #endregion
         raise HTTPException(status_code=400, detail=f"OAuth exchange failed: {exc}")
 
     # Fetch user profile
@@ -93,6 +113,9 @@ async def auth_callback(
 
     token = create_token(user_id=user_id, email=email)
     redirect_url = f"{settings.FRONTEND_URL}/auth/callback?token={token}"
+    # #region agent log
+    _debug_log("OAuth callback success, redirecting", {"redirect_url": redirect_url, "frontend_url": settings.FRONTEND_URL})
+    # #endregion
     return RedirectResponse(redirect_url)
 
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { submitQuiz } from "../api/onboarding";
 import { useAuth } from "../contexts/AuthContext";
-import { colors, btnPrimary, inputStyle } from "../theme";
+import { colors, fonts, fontSize, lineHeight, btnPrimary, inputStyle, cardStyle } from "../theme";
 
 const QUESTIONS = [
   {
@@ -60,7 +60,9 @@ export default function OnboardingPage() {
         minHeight: "100vh",
         background: colors.pageBg,
         color: colors.textPrimary,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: fonts.body,
+        fontSize: fontSize.body,
+        lineHeight: lineHeight.body,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -68,27 +70,27 @@ export default function OnboardingPage() {
         padding: "1rem",
       }}
     >
-      <h1 style={{ marginBottom: "0.5rem" }}>Tell us about your habits</h1>
-      <p style={{ color: colors.textSecondary, marginBottom: "2rem" }}>
+      <h1 style={{ fontFamily: fonts.heading, fontSize: fontSize.h1, fontWeight: 600, lineHeight: lineHeight.heading, marginBottom: "0.5rem" }}>Tell us about your habits</h1>
+      <p style={{ color: colors.textSecondary, marginBottom: "2rem", fontSize: fontSize.bodySmall }}>
         Step {step + 1} of {QUESTIONS.length}
       </p>
 
       <div
         style={{
-          background: colors.cardBg,
+          ...cardStyle,
           borderRadius: "20px",
           padding: "2rem",
           width: "100%",
           maxWidth: "480px",
-          border: `1px solid ${colors.borderLight}`,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+          marginBottom: 0,
         }}
       >
         <label
           style={{
             display: "block",
             marginBottom: "0.75rem",
-            fontWeight: 600,
+            fontWeight: 500,
+            fontSize: fontSize.body,
             color: colors.textPrimary,
           }}
         >
@@ -104,8 +106,10 @@ export default function OnboardingPage() {
           onKeyDown={(e) => e.key === "Enter" && handleNext()}
         />
         <button
+          type="button"
           onClick={handleNext}
           disabled={loading || !answers[q.key]?.trim()}
+          className="hover-btn-primary"
           style={{
             ...btnPrimary,
             marginTop: "1.25rem",

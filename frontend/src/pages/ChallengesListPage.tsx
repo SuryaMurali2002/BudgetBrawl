@@ -6,7 +6,7 @@ import {
   getChallenges,
 } from "../api/challenges";
 import { useAuth } from "../contexts/AuthContext";
-import { colors, pageStyle, cardStyle, btnPrimary, btnSmall, linkStyle } from "../theme";
+import { colors, fonts, fontSize, lineHeight, pageStyle, cardStyle, btnPrimary, btnSmall, linkStyle } from "../theme";
 
 const STATUS_COLOR: Record<string, string> = {
   pending_friend: colors.orange,
@@ -47,22 +47,22 @@ export default function ChallengesListPage() {
           alignItems: "center",
         }}
       >
-        <h1 style={{ fontWeight: 800 }}>Challenges</h1>
-        <Link to="/challenges/new" style={{ ...btnPrimary, textDecoration: "none", fontSize: "0.9rem", padding: "0.5rem 1rem" } as any}>
+        <h1 style={{ fontFamily: fonts.heading, fontSize: fontSize.h1, fontWeight: 600, lineHeight: lineHeight.heading }}>Challenges</h1>
+        <Link to="/challenges/new" className="hover-btn-primary" style={{ ...btnPrimary, textDecoration: "none", padding: "0.5rem 1rem" } as React.CSSProperties}>
           + New Challenge
         </Link>
       </div>
 
       {challenges.length === 0 ? (
-        <p style={{ color: colors.textSecondary }}>
+        <p style={{ color: colors.textSecondary, fontSize: fontSize.body }}>
           No challenges yet. Create one from the Dashboard.
         </p>
       ) : (
         challenges.map((c: any) => {
           const isInitiator = c.INITIATOR_ID === user?.USER_ID;
           const isFriend = c.FRIEND_ID === user?.USER_ID;
-          return (
-            <div key={c.CHALLENGE_ID} style={cardStyle}>
+            return (
+            <div key={c.CHALLENGE_ID} className="hover-card" style={cardStyle}>
               <div
                 style={{
                   display: "flex",
@@ -71,10 +71,10 @@ export default function ChallengesListPage() {
                 }}
               >
                 <div>
-                  <span style={{ fontWeight: 600 }}>
+                  <span style={{ fontWeight: 600, fontSize: fontSize.body }}>
                     {c.EVENT_TITLE ?? c.EVENT_ID}
                   </span>{" "}
-                  <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>
+                  <span style={{ color: colors.textSecondary, fontSize: fontSize.bodySmall }}>
                     {c.START_TIME
                       ? new Date(c.START_TIME).toLocaleDateString()
                       : ""}
@@ -82,8 +82,8 @@ export default function ChallengesListPage() {
                 </div>
                 <span
                   style={{
-                    fontSize: "0.78rem",
-                    fontWeight: 700,
+                    fontSize: fontSize.caption,
+                    fontWeight: 600,
                     color: STATUS_COLOR[c.STATUS] ?? colors.textSecondary,
                     textTransform: "uppercase",
                   }}
@@ -92,7 +92,7 @@ export default function ChallengesListPage() {
                 </span>
               </div>
 
-              <div style={{ color: colors.textSecondary, fontSize: "0.85rem", marginTop: "0.25rem" }}>
+              <div style={{ color: colors.textSecondary, fontSize: fontSize.bodySmall, marginTop: "0.25rem" }}>
                 {isInitiator ? "You challenged" : c.INITIATOR_NAME} vs{" "}
                 {isFriend ? "you" : c.FRIEND_NAME} · Limit $
                 {(c.SPEND_LIMIT ?? 0).toFixed(2)} · Stake $
@@ -100,20 +100,24 @@ export default function ChallengesListPage() {
               </div>
 
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
-                <Link to={`/challenges/${c.CHALLENGE_ID}`} style={{ ...linkStyle, padding: "0.35rem 0.75rem", borderRadius: "8px", background: colors.inputBg }}>
+                <Link to={`/challenges/${c.CHALLENGE_ID}`} className="hover-link" style={{ ...linkStyle, padding: "0.35rem 0.75rem", borderRadius: "8px", background: colors.inputBg }}>
                   Details
                 </Link>
 
                 {c.STATUS === "pending_friend" && isFriend && (
                   <>
                     <button
+                      type="button"
                       onClick={() => handleAccept(c.CHALLENGE_ID)}
+                      className="hover-btn-small"
                       style={{ ...btnSmall, background: colors.green }}
                     >
                       Accept
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleDecline(c.CHALLENGE_ID)}
+                      className="hover-btn-small"
                       style={{ ...btnSmall, background: colors.coral }}
                     >
                       Decline

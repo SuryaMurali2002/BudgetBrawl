@@ -1,0 +1,300 @@
+/* RBC-themed rainbow background — pure CSS */
+
+.rainbow-wrapper {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.rainbow {
+  height: 100vh;
+  width: 0;
+  top: 0;
+  position: absolute;
+  transform: rotate(10deg);
+  transform-origin: top right;
+}
+
+/* Animation */
+@keyframes rainbow-slide {
+  from {
+    right: -25vw;
+  }
+  to {
+    right: 125vw;
+  }
+}
+
+/* Strip 1–6: permutation sets */
+.rainbow:nth-child(1) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 44.1s linear infinite rainbow-slide;
+  animation-delay: -1.8s;
+}
+.rainbow:nth-child(2) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 43.2s linear infinite rainbow-slide;
+  animation-delay: -3.6s;
+}
+.rainbow:nth-child(3) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 42.3s linear infinite rainbow-slide;
+  animation-delay: -5.4s;
+}
+.rainbow:nth-child(4) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 41.4s linear infinite rainbow-slide;
+  animation-delay: -7.2s;
+}
+.rainbow:nth-child(5) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 40.5s linear infinite rainbow-slide;
+  animation-delay: -9s;
+}
+.rainbow:nth-child(6) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 39.6s linear infinite rainbow-slide;
+  animation-delay: -10.8s;
+}
+.rainbow:nth-child(7) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 38.7s linear infinite rainbow-slide;
+  animation-delay: -12.6s;
+}
+.rainbow:nth-child(8) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 37.8s linear infinite rainbow-slide;
+  animation-delay: -14.4s;
+}
+.rainbow:nth-child(9) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 36.9s linear infinite rainbow-slide;
+  animation-delay: -16.2s;
+}
+.rainbow:nth-child(10) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 36s linear infinite rainbow-slide;
+  animation-delay: -18s;
+}
+.rainbow:nth-child(11) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 35.1s linear infinite rainbow-slide;
+  animation-delay: -19.8s;
+}
+.rainbow:nth-child(12) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 34.2s linear infinite rainbow-slide;
+  animation-delay: -21.6s;
+}
+.rainbow:nth-child(13) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 33.3s linear infinite rainbow-slide;
+  animation-delay: -23.4s;
+}
+.rainbow:nth-child(14) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 32.4s linear infinite rainbow-slide;
+  animation-delay: -25.2s;
+}
+.rainbow:nth-child(15) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 31.5s linear infinite rainbow-slide;
+  animation-delay: -27s;
+}
+.rainbow:nth-child(16) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 30.6s linear infinite rainbow-slide;
+  animation-delay: -28.8s;
+}
+.rainbow:nth-child(17) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 29.7s linear infinite rainbow-slide;
+  animation-delay: -30.6s;
+}
+.rainbow:nth-child(18) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 28.8s linear infinite rainbow-slide;
+  animation-delay: -32.4s;
+}
+.rainbow:nth-child(19) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 27.9s linear infinite rainbow-slide;
+  animation-delay: -34.2s;
+}
+.rainbow:nth-child(20) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 27s linear infinite rainbow-slide;
+  animation-delay: -36s;
+}
+.rainbow:nth-child(21) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 26.1s linear infinite rainbow-slide;
+  animation-delay: -37.8s;
+}
+.rainbow:nth-child(22) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #FFD200,
+    0 0 50px 25px #003d73,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 25.2s linear infinite rainbow-slide;
+  animation-delay: -39.6s;
+}
+.rainbow:nth-child(23) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #005DAA,
+    50px 0 50px 25px #FFD200,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 24.3s linear infinite rainbow-slide;
+  animation-delay: -41.4s;
+}
+.rainbow:nth-child(24) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #003d73,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #005DAA,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 23.4s linear infinite rainbow-slide;
+  animation-delay: -43.2s;
+}
+.rainbow:nth-child(25) {
+  box-shadow:
+    -130px 0 80px 40px rgba(255, 255, 255, 0.9),
+    -50px 0 50px 25px #005DAA,
+    0 0 50px 25px #FFD200,
+    50px 0 50px 25px #003d73,
+    130px 0 80px 40px rgba(255, 255, 255, 0.9);
+  animation: 22.5s linear infinite rainbow-slide;
+  animation-delay: -45s;
+}
+
+/* White fade overlays (edges) */
+.rainbow-overlay.h {
+  box-shadow: 0 0 50vh 40vh rgba(255, 255, 255, 0.85);
+  width: 100vw;
+  height: 0;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.rainbow-overlay.v {
+  box-shadow: 0 0 35vw 25vw rgba(255, 255, 255, 0.85);
+  width: 0;
+  height: 100vh;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  pointer-events: none;
+}

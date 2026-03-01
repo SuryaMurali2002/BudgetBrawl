@@ -30,18 +30,42 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(
-    () => localStorage.getItem("token")
+    () => {
+      const t = localStorage.getItem("token");
+      // #region agent log
+      fetch("http://127.0.0.1:7442/ingest/92e0bf12-cf29-4ffa-90e8-0a9b856a2e52", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "058dcb" },
+        body: JSON.stringify({ sessionId: "058dcb", location: "AuthContext.tsx:init", message: "token from localStorage", data: { hasToken: !!t }, hypothesisId: "H2", timestamp: Date.now() }),
+      }).catch(() => {});
+      // #endregion
+      return t;
+    }
   );
   const [loading, setLoading] = useState(true);
 
   const refreshUser = useCallback(async () => {
+    // #region agent log
+    const log = (m: string, d: Record<string, unknown>) =>
+      fetch("http://127.0.0.1:7442/ingest/92e0bf12-cf29-4ffa-90e8-0a9b856a2e52", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "058dcb" },
+        body: JSON.stringify({ sessionId: "058dcb", location: "AuthContext.tsx", message: m, data: d, hypothesisId: "H2", timestamp: Date.now() }),
+      }).catch(() => {});
+    // #endregion
     try {
       const data = await getMe();
       setUser(data);
-    } catch {
+      // #region agent log
+      log("refreshUser success", { hasUser: !!data });
+      // #endregion
+    } catch (e) {
       setUser(null);
       setToken(null);
       localStorage.removeItem("token");
+      // #region agent log
+      log("refreshUser failed", { err: String(e) });
+      // #endregion
     }
   }, []);
 

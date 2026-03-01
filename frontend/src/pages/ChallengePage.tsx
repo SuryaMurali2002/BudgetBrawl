@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import { getChallenge, reportSpend } from "../api/challenges";
 import { useAuth } from "../contexts/AuthContext";
 import { useWallet } from "../contexts/WalletContext";
-import { colors, pageStyle, cardStyle, inputStyle, btnPrimary } from "../theme";
+import { colors, fonts, fontSize, lineHeight, pageStyle, cardStyle, inputStyle, btnPrimary } from "../theme";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function ChallengePage() {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +22,10 @@ export default function ChallengePage() {
 
   if (!challenge)
     return (
-      <div style={{ ...pageStyle, textAlign: "center", color: colors.textSecondary }}>Loading...</div>
+      <div style={{ ...pageStyle, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", color: colors.textSecondary, fontSize: fontSize.body }}>
+        <LoadingSpinner size="md" />
+        <span>Loading...</span>
+      </div>
     );
 
   const isInitiator = challenge.INITIATOR_ID === user?.USER_ID;
@@ -50,8 +54,8 @@ export default function ChallengePage() {
 
   return (
     <div style={{ ...pageStyle, maxWidth: "600px" }}>
-      <h1 style={{ fontWeight: 800 }}>{challenge.EVENT_TITLE ?? challenge.EVENT_ID}</h1>
-      <p style={{ color: colors.textSecondary }}>
+      <h1 style={{ fontFamily: fonts.heading, fontSize: fontSize.h1, fontWeight: 600, lineHeight: lineHeight.heading }}>{challenge.EVENT_TITLE ?? challenge.EVENT_ID}</h1>
+      <p style={{ color: colors.textSecondary, fontSize: fontSize.bodySmall }}>
         {challenge.START_TIME
           ? new Date(challenge.START_TIME).toLocaleString()
           : ""}
@@ -60,7 +64,7 @@ export default function ChallengePage() {
           : ""}
       </p>
 
-      <div style={{ ...cardStyle, marginTop: "1rem", padding: "1rem 1.25rem" }}>
+      <div className="hover-card" style={{ ...cardStyle, marginTop: "1rem", padding: "1rem 1.25rem" }}>
         <Row label="Status" value={challenge.STATUS?.replace(/_/g, " ")} />
         <Row label="Initiator" value={challenge.INITIATOR_NAME} />
         <Row label="Friend" value={challenge.FRIEND_NAME} />
@@ -89,7 +93,7 @@ export default function ChallengePage() {
             marginTop: "1rem",
             color: result.winner_id === user?.USER_ID ? "#2E7D32" : "#C62828",
             fontWeight: 600,
-            fontSize: "1.05rem",
+            fontSize: fontSize.body,
           }}
         >
           {result.winner_id === user?.USER_ID
@@ -100,8 +104,8 @@ export default function ChallengePage() {
 
       {canReport && !result && (
         <div style={{ marginTop: "1.5rem" }}>
-          <h2 style={{ fontWeight: 700 }}>Report Actual Spend</h2>
-          <p style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>
+          <h2 style={{ fontFamily: fonts.heading, fontSize: fontSize.h2, fontWeight: 600, lineHeight: lineHeight.heading }}>Report Actual Spend</h2>
+          <p style={{ color: colors.textSecondary, fontSize: fontSize.bodySmall }}>
             Enter what you actually spent at this event.
           </p>
           <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -114,11 +118,11 @@ export default function ChallengePage() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <button onClick={handleReport} disabled={submitting} style={btnPrimary}>
+            <button type="button" onClick={handleReport} disabled={submitting} className="hover-btn-primary" style={btnPrimary}>
               {submitting ? "Submitting..." : "Submit"}
             </button>
           </div>
-          {error && <p style={{ color: colors.coral, marginTop: "0.5rem" }}>{error}</p>}
+          {error && <p style={{ color: colors.coral, marginTop: "0.5rem", fontSize: fontSize.bodySmall }}>{error}</p>}
         </div>
       )}
     </div>
@@ -135,8 +139,8 @@ function Row({ label, value }: { label: string; value: string }) {
         borderBottom: `1px solid ${colors.borderLight}`,
       }}
     >
-      <span style={{ color: colors.textSecondary }}>{label}</span>
-      <span style={{ fontWeight: 500 }}>{value}</span>
+      <span style={{ color: colors.textSecondary, fontSize: fontSize.bodySmall }}>{label}</span>
+      <span style={{ fontWeight: 500, fontSize: fontSize.body }}>{value}</span>
     </div>
   );
 }
